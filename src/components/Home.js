@@ -9,46 +9,51 @@ import { useDispatch,useSelector } from "react-redux";
 import db from "../firebase";
 import {setMovies} from "../features/movie/movieSlice";
 import {selectUserName} from "../features/user/userSlice";
+import Trending from "./Trending";
 
 const Home = (props) =>{
     const dispatch = useDispatch()
     const userName = useSelector(selectUserName);
-    let recommends = [];
-    let newDisney = [];
-    let originals = [];
-    let trending = [];
-
+    
     useEffect (()=>{
+      let recommends = [];
+      let newDisney = [];
+      let originals = [];
+      let trending = [];
       db.collection('movies').onSnapshot((snapshot)=>{
-          snapshot.docs.map((doc)=>{
+          snapshot.docs.forEach((doc)=>{
             switch(doc.data().type){
-              case 'recommends':
-                recommends.push({id:doc.id,...doc.data()})
+              case "recommend":
+                recommends = [...recommends,{id:doc.id,...doc.data()}]
                 break;
               
               case 'new':
-                newDisney.push({id:doc.id,...doc.data()})
+                newDisney = [...newDisney,{id:doc.id,...doc.data()}]
                 break;
               
-              case 'originals':
-                originals.push({id:doc.id,...doc.data()})
+              case "original":
+                originals = [originals,{id:doc.id,...doc.data()}]
                 break;
               
-              case 'trending':
-                trending.push({id:doc.id,...doc.data()})
+              case "trending":
+                trending = [trending,{id:doc.id,...doc.data()}]
                 break;
               
+              default:
+                console.log("Out of the list");  
+                break;
             }
           });
-        });
 
-        dispatch(setMovies({
-          recommends : recommends,
-          newDisney : newDisney,
-          originals : originals,
-          trending : trending,
-        }))
+          dispatch(setMovies({
+            recommends : recommends,
+            newDisney : newDisney,
+            originals : originals,
+            trending : trending,
+          }));
 
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps 
     },[userName]);
 
     return (
@@ -58,6 +63,7 @@ const Home = (props) =>{
           <Recommended/>
           <NewDisney/>
           <Originals/>
+          <Trending/>
       </Container>
     );
 }
