@@ -22,21 +22,22 @@ const Home = (props) =>{
       let trending = [];
       db.collection('movies').onSnapshot((snapshot)=>{
           snapshot.docs.forEach((doc)=>{
+            
             switch(doc.data().type){
               case "recommend":
                 recommends = [...recommends,{id:doc.id,...doc.data()}]
                 break;
               
-              case 'new':
+              case "new":
                 newDisney = [...newDisney,{id:doc.id,...doc.data()}]
                 break;
               
               case "original":
-                originals = [originals,{id:doc.id,...doc.data()}]
+                originals = [...originals,{id:doc.id,...doc.data()}]
                 break;
               
               case "trending":
-                trending = [trending,{id:doc.id,...doc.data()}]
+                trending = [...trending,{id:doc.id,...doc.data()}]
                 break;
               
               default:

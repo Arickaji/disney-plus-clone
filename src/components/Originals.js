@@ -13,7 +13,6 @@ const Originals = (props) =>{
                 movies.map((movie, key) => (
                     <Wrap key={key}>
                     <Link to={`/detail/` + movie.id}>
-                        {console.log(movie.cardImg)}
                         <img src={movie.cardImg} alt={movie.title} />
                     </Link>
                     </Wrap>
